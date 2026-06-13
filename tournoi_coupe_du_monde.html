@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tournoi Coupe du Monde 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-dark: #8B6914;
+    --pitch: #1a6b2e;
+    --pitch-dark: #0d3d18;
+    --pitch-light: #2a8a3e;
+    --white: #FFFFFF;
+    --off-white: #F5F2EA;
+    --dark: #0A0F0A;
+    --text-muted: #6B7280;
+    --card-bg: #FFFFFF;
+    --border: rgba(201,168,76,0.25);
+    --red: #D32F2F;
+    --red-light: #FFEBEE;
+    --amber: #F57F17;
+    --amber-light: #FFF8E1;
+    --green: #1B5E20;
+    --green-light: #E8F5E9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(160deg, #0d3d18 0%, #1a6b2e 50%, #0a2e10 100%);
+    padding: 2rem 1rem 1.5rem;
+    text-align: center;
+    border-bottom: 2px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 38px,
+      rgba(255,255,255,0.03) 38px,
+      rgba(255,255,255,0.03) 40px
+    );
+  }
+  .hero-trophy { font-size: 3rem; margin-bottom: 6px; position: relative; }
+  .hero-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    position: relative;
+  }
+  .hero-sub {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    position: relative;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.75);
+  }
+  .hero-stat strong { color: var(--gold-light); display: block; font-size: 1rem; font-weight: 600; }
+
+  /* ─── TABS ─── */
+  .tabs-bar {
+    background: #111811;
+    display: flex;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 4px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.45);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .tab-btn .tab-icon { font-size: 1.1rem; }
+  .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+  .tab-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  /* ─── CONTENT ─── */
+  .content { padding: 1rem; max-width: 480px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ─── SECTION TITLE ─── */
+  .section-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.2); }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: #141d14;
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 8px 14px;
+    background: rgba(201,168,76,0.08);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .badge-live { background: #D32F2F; color: #fff; animation: pulse-badge 1.4s infinite; }
+  .badge-next { background: rgba(201,168,76,0.2); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.4); }
+  .badge-done { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); }
+  .badge-semi { background: rgba(100,180,255,0.15); color: #90CAF9; border: 1px solid rgba(100,180,255,0.3); }
+  .badge-final { background: rgba(201,168,76,0.25); color: var(--gold-light); border: 1px solid var(--gold); }
+
+  @keyframes pulse-badge {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  /* ─── MATCH CARD ─── */
+  .match-body { padding: 14px; }
+  .vs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .team-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .team-col.right { align-items: center; }
+  .team-flag {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border: 2px solid rgba(201,168,76,0.3);
+  }
+  .team-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .score-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .score-display {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .score-vs {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+  }
+  .match-time-label {
+    text-align: center;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── STANDINGS ─── */
+  .standing-table { width: 100%; border-collapse: collapse; }
+  .standing-table th {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .standing-table th:first-child { text-align: left; }
+  .standing-table td {
+    padding: 10px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.8);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .standing-table tr:last-child td { border-bottom: none; }
+  .standing-table td:first-child { text-align: left; }
+  .standing-table td.pts {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .standing-table tr.qualified td { color: var(--white); }
+  .standing-table tr.qualified .rank-num { color: var(--gold-light); font-weight: 600; }
+  .team-cell { display: flex; align-items: center; gap: 8px; }
+  .mini-flag { font-size: 1.1rem; }
+  .rank-num { font-family: 'Oswald', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.35); width: 16px; text-align: center; }
+  .qualified-badge {
+    font-size: 0.6rem;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  /* ─── BRACKET ─── */
+  .bracket-stage { margin-bottom: 1.5rem; }
+  .bracket-match {
+    background: #141d14;
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .bracket-team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .bracket-team:last-child { border-bottom: none; }
+  .bracket-team.winner { background: rgba(201,168,76,0.08); }
+  .bracket-team-name { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; }
+  .bracket-score {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gold-light);
+  }
+  .bracket-score.pending { color: rgba(255,255,255,0.2); }
+  .tbd { color: rgba(255,255,255,0.25); font-style: italic; font-size: 0.82rem; }
+
+  /* ─── RESPECT SECTION ─── */
+  .respect-hero {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .respect-hero-icon { font-size: 3rem; margin-bottom: 8px; }
+  .respect-hero-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .respect-hero-sub { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  .respect-card {
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    border: 1px solid;
+  }
+  .respect-card.green-card {
+    background: rgba(27,94,32,0.25);
+    border-color: rgba(76,175,80,0.3);
+  }
+  .respect-card.red-card {
+    background: rgba(211,47,47,0.15);
+    border-color: rgba(239,83,80,0.3);
+  }
+  .respect-card.amber-card {
+    background: rgba(245,127,23,0.15);
+    border-color: rgba(255,167,38,0.3);
+  }
+  .rc-icon { font-size: 1.6rem; margin-bottom: 6px; }
+  .rc-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .respect-card.green-card .rc-title { color: #81C784; }
+  .respect-card.red-card .rc-title { color: #EF9A9A; }
+  .respect-card.amber-card .rc-title { color: #FFB74D; }
+  .rc-text { font-size: 0.8rem; color: rgba(255,255,255,0.65); line-height: 1.7; }
+  .hotline-box {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .hotline-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+  }
+  .hotline-label { font-size: 0.72rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+  .hotline-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 6px; }
+
+  .signal-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #EF9A9A;
+    border-radius: 10px;
+    color: #EF9A9A;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .signal-btn:hover { background: rgba(211,47,47,0.12); }
+
+  /* ─── ADMIN ─── */
+  .admin-locked {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .admin-locked h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .pin-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .pin-input {
+    width: 48px;
+    height: 52px;
+    background: #1a251a;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    color: var(--gold-light);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    text-align: center;
+    font-weight: 600;
+    outline: none;
+  }
+  .pin-input:focus { border-color: var(--gold); }
+  .pin-btn {
+    padding: 10px 24px;
+    background: var(--gold);
+    border: none;
+    border-radius: 8px;
+    color: var(--dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .admin-panel { display: none; }
+  .admin-panel.unlocked { display: block; }
+  .admin-match-item {
+    background: #141d14;
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .admin-match-label {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .admin-match-teams {
+    font-size: 0.85rem;
+    color: var(--white);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .score-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .score-inp {
+    width: 56px;
+    height: 42px;
+    background: #0d3d18;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    color: var(--gold-light);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    text-align: center;
+    font-weight: 600;
+    outline: none;
+  }
+  .score-inp:focus { border-color: var(--gold); }
+  .score-sep { font-family: 'Oswald', sans-serif; color: rgba(255,255,255,0.3); font-size: 1rem; }
+  .status-sel {
+    flex: 1;
+    background: #1a251a;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    color: var(--white);
+    font-size: 0.78rem;
+    padding: 8px 10px;
+    outline: none;
+    cursor: pointer;
+  }
+  .save-btn {
+    padding: 8px 16px;
+    background: var(--gold);
+    border: none;
+    border-radius: 8px;
+    color: var(--dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pin-error { color: #EF9A9A; font-size: 0.78rem; margin-top: 6px; min-height: 1.2em; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-trophy">🏆</div>
+  <div class="hero-title">Tournoi Coupe du Monde</div>
+  <div class="hero-sub">Édition Été 2026</div>
+  <div style="margin-top:8px;position:relative">
+    <a href="#" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;letter-spacing:0.08em;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:color .2s" onmouseover="this.style.color='rgba(201,168,76,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">Organisé par Sakinah</a>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-stat"><strong>8</strong>Équipes</div>
+    <div class="hero-stat"><strong>13</strong>Matchs</div>
+    <div class="hero-stat"><strong>2</strong>Poules</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('matchs',this)">
+    <span class="tab-icon">⚽</span>Matchs
+  </button>
+  <button class="tab-btn" onclick="showTab('poules',this)">
+    <span class="tab-icon">📊</span>Classement
+  </button>
+  <button class="tab-btn" onclick="showTab('bracket',this)">
+    <span class="tab-icon">🏅</span>Phases finales
+  </button>
+  <button class="tab-btn" onclick="showTab('respect',this)">
+    <span class="tab-icon">🛡️</span>Respect
+  </button>
+  <button class="tab-btn" onclick="showTab('admin',this)">
+    <span class="tab-icon">⚙️</span>Admin
+  </button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ══════ MATCHS ══════ -->
+  <div id="matchs" class="section active">
+    <div class="section-label">Poule A — 6 rotations</div>
+    <div id="matches-poule-a"></div>
+    <div class="section-label" style="margin-top:1rem">Poule B — 6 rotations</div>
+    <div id="matches-poule-b"></div>
+  </div>
+
+  <!-- ══════ CLASSEMENT ══════ -->
+  <div id="poules" class="section">
+    <div class="section-label">Poule A</div>
+    <div class="card">
+      <table class="standing-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align:left">Équipe</th>
+            <th>J</th><th>G</th><th>N</th><th>P</th><th>Bf</th><th>Pts</th>
+          </tr>
+        </thead>
+        <tbody id="table-a"></tbody>
+      </table>
+    </div>
+    <div class="section-label" style="margin-top:1rem">Poule B</div>
+    <div class="card">
+      <table class="standing-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align:left">Équipe</th>
+            <th>J</th><th>G</th><th>N</th><th>P</th><th>Bf</th><th>Pts</th>
+          </tr>
+        </thead>
+        <tbody id="table-b"></tbody>
+      </table>
+    </div>
+    <div style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px">
+      🥇🥈 Les 2 premières de chaque poule se qualifient en demi-finales
+    </div>
+  </div>
+
+  <!-- ══════ BRACKET ══════ -->
+  <div id="bracket" class="section">
+    <div class="section-label">Demi-finales</div>
+    <div id="bracket-semis"></div>
+    <div class="section-label" style="margin-top:1rem">Finale</div>
+    <div id="bracket-finale"></div>
+    <div id="champion-banner" style="display:none"></div>
+  </div>
+
+
+  <!-- ══════ RESPECT ══════ -->
+  <div id="respect" class="section">
+    <div class="respect-hero">
+      <div class="respect-hero-icon">✊</div>
+      <div class="respect-hero-title">Fair-play & Respect</div>
+      <div class="respect-hero-sub">Ce tournoi est un espace de sport, de fraternité et de fair-play.<br>Ces valeurs commencent avant et continuent après le coup de sifflet final.</div>
+    </div>
+
+    <div class="respect-card green-card">
+      <div class="rc-icon">🤝</div>
+      <div class="rc-title">Le sport unit, le respect protège</div>
+      <div class="rc-text">Chaque joueur, arbitre et spectateur mérite d'être traité avec dignité. Serre la main de l'adversaire avant et après le match — c'est le code d'honneur du football.</div>
+    </div>
+
+    <div class="respect-card red-card">
+      <div class="rc-icon">🚫</div>
+      <div class="rc-title">Tolérance zéro contre le harcèlement</div>
+      <div class="rc-text">Insultes, moqueries répétées, exclusion volontaire d'un joueur, humiliation après un match perdu : ce sont des actes graves qui abîment les personnes et détruisent l'esprit d'équipe. Un seul incident peut briser la confiance de quelqu'un.</div>
+    </div>
+
+    <div class="respect-card amber-card">
+      <div class="rc-icon">📱</div>
+      <div class="rc-title">Le cyberharcèlement aussi, c'est du harcèlement</div>
+      <div class="rc-text">Partager une vidéo pour se moquer, exclure d'un groupe, envoyer des messages blessants après le match : ces actes ont des conséquences réelles. Ce qui se passe sur l'écran fait autant de mal que sur le terrain.</div>
+    </div>
+
+    <div class="hotline-box">
+      <div class="hotline-num">3018</div>
+      <div class="hotline-label">Numéro national contre le cyberharcèlement</div>
+      <div class="hotline-sub">Gratuit · Confidentiel · Disponible 7j/7 de 9h à 23h<br>Aussi disponible sur l'application 3018</div>
+    </div>
+
+    <button class="signal-btn" onclick="alert('Merci de signaler cet incident à un organisateur directement sur place, ou appelez le 3018.')">
+      🚨 Signaler un incident
+    </button>
+  </div>
+
+  <!-- ══════ ADMIN ══════ -->
+  <div id="admin" class="section">
+    <div class="admin-locked" id="lock-screen">
+      <div style="font-size:2rem;margin-bottom:12px">🔒</div>
+      <h3>Accès organisateur</h3>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:16px">Entrez le code PIN pour modifier les scores</div>
+      <div class="pin-row">
+        <input type="password" maxlength="1" class="pin-input" id="p1" oninput="nextPin(this,'p2')">
+        <input type="password" maxlength="1" class="pin-input" id="p2" oninput="nextPin(this,'p3')">
+        <input type="password" maxlength="1" class="pin-input" id="p3" oninput="nextPin(this,'p4')">
+        <input type="password" maxlength="1" class="pin-input" id="p4" oninput="nextPin(this,null)">
+      </div>
+      <button class="pin-btn" onclick="checkPin()">Déverrouiller</button>
+      <div class="pin-error" id="pin-error"></div>
+    </div>
+    <div class="admin-panel" id="admin-panel">
+      <div class="section-label">Modifier les scores</div>
+      <div id="admin-matches-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Tournoi Coupe du Monde 2025 · Respect & Fair-play</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const PIN = "1234"; // ← modifiez ici
+
+const teams = {
+  A1: { name: "Les Aigles",   flag: "🦅", color: "#185FA5" },
+  A2: { name: "Les Renards",  flag: "🦊", color: "#D32F2F" },
+  A3: { name: "Les Loups",    flag: "🐺", color: "#1D9E75" },
+  A4: { name: "Les Lions",    flag: "🦁", color: "#BA7517" },
+  B1: { name: "Les Requins",  flag: "🦈", color: "#6A1B9A" },
+  B2: { name: "Les Tigres",   flag: "🐯", color: "#E65100" },
+  B3: { name: "Les Cobras",   flag: "🐍", color: "#1B5E20" },
+  B4: { name: "Les Faucons",  flag: "🦃", color: "#1565C0" },
+};
+
+// Matchs de poule
+let matches = [
+  { id:"m1",  poule:"A", rot:1, terrain:"A", t1:"A1", t2:"A2", s1:2,    s2:1,    status:"done"    },
+  { id:"m2",  poule:"A", rot:1, terrain:"B", t1:"A3", t2:"A4", s1:0,    s2:0,    status:"done"    },
+  { id:"m3",  poule:"B", rot:2, terrain:"A", t1:"B1", t2:"B2", s1:1,    s2:0,    status:"live"    },
+  { id:"m4",  poule:"B", rot:2, terrain:"B", t1:"B3", t2:"B4", s1:null, s2:null, status:"pending" },
+  { id:"m5",  poule:"A", rot:3, terrain:"A", t1:"A1", t2:"A3", s1:null, s2:null, status:"pending" },
+  { id:"m6",  poule:"A", rot:3, terrain:"B", t1:"A2", t2:"A4", s1:null, s2:null, status:"pending" },
+  { id:"m7",  poule:"B", rot:4, terrain:"A", t1:"B1", t2:"B3", s1:null, s2:null, status:"pending" },
+  { id:"m8",  poule:"B", rot:4, terrain:"B", t1:"B2", t2:"B4", s1:null, s2:null, status:"pending" },
+  { id:"m9",  poule:"A", rot:5, terrain:"A", t1:"A1", t2:"A4", s1:null, s2:null, status:"pending" },
+  { id:"m10", poule:"A", rot:5, terrain:"B", t1:"A2", t2:"A3", s1:null, s2:null, status:"pending" },
+  { id:"m11", poule:"B", rot:6, terrain:"A", t1:"B1", t2:"B4", s1:null, s2:null, status:"pending" },
+  { id:"m12", poule:"B", rot:6, terrain:"B", t1:"B2", t2:"B3", s1:null, s2:null, status:"pending" },
+];
+
+// Matchs phases finales — t1/t2 sont des IDs d'équipe ou null (= à déterminer)
+let finals = [
+  { id:"sf1", phase:"semi", label:"Demi-finale 1", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule A vs 2ème Poule B" },
+  { id:"sf2", phase:"semi", label:"Demi-finale 2", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule B vs 2ème Poule A" },
+  { id:"fin", phase:"final", label:"Finale",        duree:"2 × 15 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"Vainqueur SF1 vs Vainqueur SF2" },
+];
+
+// ═══════════════════════════════════════
+// STANDINGS
+// ═══════════════════════════════════════
+function calcStandings(poule) {
+  const ids = Object.keys(teams).filter(k => k.startsWith(poule));
+  const stats = {};
+  ids.forEach(id => stats[id] = { J:0, G:0, N:0, P:0, bf:0, bc:0, pts:0 });
+
+  matches.filter(m => m.poule === poule && m.status === 'done').forEach(m => {
+    if (m.s1 === null) return;
+    stats[m.t1].J++; stats[m.t2].J++;
+    stats[m.t1].bf += m.s1; stats[m.t1].bc += m.s2;
+    stats[m.t2].bf += m.s2; stats[m.t2].bc += m.s1;
+    if (m.s1 > m.s2)      { stats[m.t1].G++; stats[m.t1].pts+=3; stats[m.t2].P++; }
+    else if (m.s1 < m.s2) { stats[m.t2].G++; stats[m.t2].pts+=3; stats[m.t1].P++; }
+    else                  { stats[m.t1].N++; stats[m.t1].pts++; stats[m.t2].N++; stats[m.t2].pts++; }
+  });
+
+  return ids.sort((a,b) => {
+    const sa = stats[a], sb = stats[b];
+    if (sb.pts !== sa.pts) return sb.pts - sa.pts;
+    return (sb.bf-sb.bc) - (sa.bf-sa.bc);
+  }).map(id => ({ id, ...stats[id] }));
+}
+
+// Recalcule automatiquement les qualifiés et remplit les demi-finales/finale
+function syncBracketTeams() {
+  const topA = calcStandings('A');
+  const topB = calcStandings('B');
+
+  // Demi-finale 1 : 1ère A vs 2ème B
+  finals[0].t1 = topA[0] ? topA[0].id : null;
+  finals[0].t2 = topB[1] ? topB[1].id : null;
+  // Demi-finale 2 : 1ère B vs 2ème A
+  finals[1].t1 = topB[0] ? topB[0].id : null;
+  finals[1].t2 = topA[1] ? topA[1].id : null;
+
+  // Finale : vainqueur SF1 vs vainqueur SF2
+  const sf1 = finals[0];
+  const sf2 = finals[1];
+  if (sf1.status === 'done' && sf1.s1 !== null && sf1.s2 !== null) {
+    finals[2].t1 = sf1.s1 > sf1.s2 ? sf1.t1 : sf1.s2 > sf1.s1 ? sf1.t2 : null;
+  } else { finals[2].t1 = null; }
+  if (sf2.status === 'done' && sf2.s1 !== null && sf2.s2 !== null) {
+    finals[2].t2 = sf2.s1 > sf2.s2 ? sf2.t1 : sf2.s2 > sf2.s1 ? sf2.t2 : null;
+  } else { finals[2].t2 = null; }
+}
+
+// ═══════════════════════════════════════
+// RENDER MATCHS POULE
+// ═══════════════════════════════════════
+function renderMatches() {
+  const aEl = document.getElementById('matches-poule-a');
+  const bEl = document.getElementById('matches-poule-b');
+  aEl.innerHTML = '';
+  bEl.innerHTML = '';
+
+  matches.forEach(m => {
+    const t1 = teams[m.t1], t2 = teams[m.t2];
+    const badgeClass = m.status === 'live' ? 'badge-live' : m.status === 'done' ? 'badge-done' : 'badge-next';
+    const badgeText  = m.status === 'live' ? '🔴 EN COURS' : m.status === 'done' ? 'Terminé' : 'À venir';
+    const scoreStr   = (m.s1 !== null && m.s2 !== null)
+      ? `<div class="score-display">${m.s1} – ${m.s2}</div>`
+      : `<div class="score-vs">VS</div>`;
+
+    const html = `
+      <div class="card">
+        <div class="card-header">
+          <span class="card-header-text">Rotation ${m.rot} · Terrain ${m.terrain} · 15 min</span>
+          <span class="badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="match-body">
+          <div class="vs-row">
+            <div class="team-col">
+              <div class="team-flag" style="background:${t1.color}22;border-color:${t1.color}55">${t1.flag}</div>
+              <div class="team-label">${t1.name}</div>
+            </div>
+            <div class="score-col">${scoreStr}</div>
+            <div class="team-col right">
+              <div class="team-flag" style="background:${t2.color}22;border-color:${t2.color}55">${t2.flag}</div>
+              <div class="team-label">${t2.name}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    if (m.poule === 'A') aEl.innerHTML += html;
+    else bEl.innerHTML += html;
+  });
+}
+
+// ═══════════════════════════════════════
+// RENDER STANDINGS
+// ═══════════════════════════════════════
+function renderStandings() {
+  ['A','B'].forEach(poule => {
+    const tbody = document.getElementById(`table-${poule.toLowerCase()}`);
+    const rows = calcStandings(poule);
+    tbody.innerHTML = rows.map((r, i) => {
+      const t = teams[r.id];
+      const q = i < 2 ? '<span class="qualified-badge">Q</span>' : '';
+      return `<tr class="${i<2?'qualified':''}">
+        <td><span class="rank-num">${i+1}</span></td>
+        <td><div class="team-cell"><span class="mini-flag">${t.flag}</span>${t.name}${q}</div></td>
+        <td>${r.J}</td><td>${r.G}</td><td>${r.N}</td><td>${r.P}</td><td>${r.bf}</td>
+        <td class="pts">${r.pts}</td>
+      </tr>`;
+    }).join('');
+  });
+}
+
+// ═══════════════════════════════════════
+// RENDER BRACKET
+// ═══════════════════════════════════════
+function renderBracket() {
+  syncBracketTeams();
+
+  const sfEl  = document.getElementById('bracket-semis');
+  const finEl = document.getElementById('bracket-finale');
+
+  function matchCard(f) {
+    const isFinal = f.phase === 'final';
+    const badgeClass = f.status === 'live' ? 'badge-live' : f.status === 'done' ? 'badge-done' : isFinal ? 'badge-final' : 'badge-semi';
+    const badgeText  = f.status === 'live' ? '🔴 EN COURS' : f.status === 'done' ? 'Terminé' : f.duree;
+
+    function teamRow(teamId, score, isFinalStage) {
+      const winner = f.status === 'done' && score !== null && score > (score === f.s1 ? f.s2 : f.s1);
+      if (teamId && teams[teamId]) {
+        const t = teams[teamId];
+        return `<div class="bracket-team${winner ? ' winner' : ''}">
+          <div class="bracket-team-name">
+            <span style="font-size:1.1rem">${t.flag}</span>
+            <span>${t.name}</span>
+          </div>
+          <div class="bracket-score${score === null ? ' pending' : ''}">${score !== null ? score : '–'}</div>
+        </div>`;
+      }
+      return `<div class="bracket-team">
+        <div class="bracket-team-name"><span class="tbd">${isFinalStage ? 'Vainqueur SF' : 'À qualifier'}</span></div>
+        <div class="bracket-score pending">–</div>
+      </div>`;
+    }
+
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-family:'Oswald',sans-serif;font-size:0.78rem;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em">${f.label}</span>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="bracket-match">
+        ${teamRow(f.t1, f.s1, isFinal)}
+        ${teamRow(f.t2, f.s2, isFinal)}
+      </div>
+    </div>`;
+  }
+
+  sfEl.innerHTML  = finals.filter(f => f.phase === 'semi').map(matchCard).join('');
+  finEl.innerHTML = finals.filter(f => f.phase === 'final').map(matchCard).join('');
+
+  // Champion banner
+  const fin = finals[2];
+  const champEl = document.getElementById('champion-banner');
+  if (fin.status === 'done' && fin.s1 !== null && fin.s2 !== null && fin.t1 && fin.t2) {
+    const champId = fin.s1 > fin.s2 ? fin.t1 : fin.s1 < fin.s2 ? fin.t2 : null;
+    if (champId) {
+      const t = teams[champId];
+      champEl.innerHTML = `<div style="text-align:center;padding:1.2rem;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.35);border-radius:12px;margin-top:1rem">
+        <div style="font-size:2rem;margin-bottom:4px">🏆</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px">Champion du tournoi</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold-light)">${t.flag} ${t.name}</div>
+      </div>`;
+      champEl.style.display = 'block';
+    }
+  } else {
+    champEl.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════
+function renderAdminMatches() {
+  const list = document.getElementById('admin-matches-list');
+
+  function adminItem(m, labelHtml, isPoule) {
+    const t1 = m.t1 && teams[m.t1] ? teams[m.t1] : null;
+    const t2 = m.t2 && teams[m.t2] ? teams[m.t2] : null;
+    const teamLine = t1 && t2
+      ? `${t1.flag} ${t1.name} vs ${t2.flag} ${t2.name}`
+      : `<span style="color:rgba(255,255,255,0.3);font-style:italic">Équipes à déterminer (classement poule en cours)</span>`;
+    const disabled = (!t1 || !t2) ? 'disabled style="opacity:0.4;pointer-events:none"' : '';
+    return `<div class="admin-match-item">
+      <div class="admin-match-label">${labelHtml}</div>
+      <div class="admin-match-teams">${teamLine}</div>
+      <div class="score-inputs" ${disabled}>
+        <input type="number" min="0" max="30" class="score-inp" id="adm-s1-${m.id}" value="${m.s1 !== null ? m.s1 : ''}" placeholder="0">
+        <span class="score-sep">–</span>
+        <input type="number" min="0" max="30" class="score-inp" id="adm-s2-${m.id}" value="${m.s2 !== null ? m.s2 : ''}" placeholder="0">
+        <select class="status-sel" id="adm-st-${m.id}">
+          <option value="pending" ${m.status==='pending'?'selected':''}>À venir</option>
+          <option value="live"    ${m.status==='live'   ?'selected':''}>En cours</option>
+          <option value="done"    ${m.status==='done'   ?'selected':''}>Terminé</option>
+        </select>
+        <button class="save-btn" onclick="saveMatch('${m.id}','${isPoule?'poule':'final'}')">Sauver</button>
+      </div>
+    </div>`;
+  }
+
+  const pouleItems = matches.map(m =>
+    adminItem(m, `Poule ${m.poule} · Rotation ${m.rot} · Terrain ${m.terrain}`, true)
+  ).join('');
+
+  syncBracketTeams();
+  const finalItems = finals.map(f =>
+    adminItem(f, `${f.label} <span style="color:rgba(255,255,255,0.3);font-weight:400">${f.duree}</span>`, false)
+  ).join('');
+
+  list.innerHTML = `
+    <div class="section-label">Matchs de poule</div>
+    ${pouleItems}
+    <div class="section-label" style="margin-top:1.2rem">Phases finales</div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-bottom:10px">Les équipes se remplissent automatiquement selon le classement des poules.</div>
+    ${finalItems}`;
+}
+
+function saveMatch(id, type) {
+  let m;
+  if (type === 'poule') m = matches.find(x => x.id === id);
+  else m = finals.find(x => x.id === id);
+
+  const s1v = document.getElementById(`adm-s1-${id}`).value;
+  const s2v = document.getElementById(`adm-s2-${id}`).value;
+  const stv = document.getElementById(`adm-st-${id}`).value;
+  m.s1 = s1v !== '' ? parseInt(s1v) : null;
+  m.s2 = s2v !== '' ? parseInt(s2v) : null;
+  m.status = stv;
+
+  renderMatches();
+  renderStandings();
+  renderBracket();
+  renderAdminMatches(); // re-render pour mettre à jour les équipes de demi/finale
+
+  // feedback visuel
+  const btns = document.querySelectorAll(`[onclick="saveMatch('${id}','${type}')"]`);
+  btns.forEach(btn => { btn.textContent = '✓ OK'; setTimeout(() => btn.textContent = 'Sauver', 1500); });
+}
+
+// ═══════════════════════════════════════
+// PIN
+// ═══════════════════════════════════════
+function nextPin(el, nextId) {
+  if (el.value && nextId) document.getElementById(nextId).focus();
+}
+function checkPin() {
+  const p = ['p1','p2','p3','p4'].map(id => document.getElementById(id).value).join('');
+  if (p === PIN) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('admin-panel').classList.add('unlocked');
+    renderAdminMatches();
+  } else {
+    document.getElementById('pin-error').textContent = 'Code incorrect. Réessayez.';
+    ['p1','p2','p3','p4'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('p1').focus();
+  }
+}
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// INIT
+renderMatches();
+renderStandings();
+renderBracket();
+</script>
+</body>
+</html>
