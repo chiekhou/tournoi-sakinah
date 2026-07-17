@@ -7,26 +7,26 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #F0D080;
-    --gold-dark: #8B6914;
-    --pitch: #1a6b2e;
-    --pitch-dark: #0d3d18;
-    --pitch-light: #2a8a3e;
-    --white: #FFFFFF;
-    --off-white: #F5F2EA;
-    --dark: #0A0F0A;
-    --text-muted: #6B7280;
-    --card-bg: #FFFFFF;
-    --border: rgba(201,168,76,0.25);
-    --red: #D32F2F;
-    --red-light: #FFEBEE;
-    --amber: #F57F17;
-    --amber-light: #FFF8E1;
-    --green: #1B5E20;
-    --green-light: #E8F5E9;
-  }
+ :root {
+  --gold: #3DC869;
+  --gold-light: #6FDB94;
+  --gold-dark: #27a855;
+  --pitch: #3DC869;
+  --pitch-dark: #2D3A4A;
+  --pitch-light: #6FDB94;
+  --white: #FFFFFF;
+  --off-white: #F5F2EA;
+  --dark: #0A0F0A;
+  --text-muted: #6B7280;
+  --card-bg: #FFFFFF;
+  --border: rgba(61,200,105,0.25);
+  --red: #D32F2F;
+  --red-light: #FFEBEE;
+  --amber: #F57F17;
+  --amber-light: #FFF8E1;
+  --green: #1B5E20;
+  --green-light: #E8F5E9;
+}
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,7 +39,7 @@
 
   /* ─── HERO ─── */
   .hero {
-    background: linear-gradient(160deg, #0d3d18 0%, #1a6b2e 50%, #0a2e10 100%);
+    background: linear-gradient(160deg, #2D3A4A 0%, #3DC869 50%, #1a2530 100%);
     padding: 2rem 1rem 1.5rem;
     text-align: center;
     border-bottom: 2px solid var(--gold);
@@ -92,6 +92,29 @@
     color: rgba(255,255,255,0.75);
   }
   .hero-stat strong { color: var(--gold-light); display: block; font-size: 1rem; font-weight: 600; }
+
+  .format-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    position: relative;
+  }
+  .format-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.6);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .format-btn.active { background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700; }
+  .format-btn:hover:not(.active) { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.35); }
 
   /* ─── TABS ─── */
   .tabs-bar {
@@ -472,7 +495,7 @@
   .score-inp {
     width: 56px;
     height: 42px;
-    background: #0d3d18;
+    background: #2D3A4A;
     border: 1px solid rgba(201,168,76,0.3);
     border-radius: 8px;
     color: var(--gold-light);
@@ -535,9 +558,13 @@
     <a href="#" style="font-size:0.72rem;color:rgba(255,255,255,0.35);text-decoration:none;letter-spacing:0.08em;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:color .2s" onmouseover="this.style.color='rgba(201,168,76,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">Organisé par Sakinah</a>
   </div>
   <div class="hero-meta">
-    <div class="hero-stat"><strong>8</strong>Équipes</div>
-    <div class="hero-stat"><strong>13</strong>Matchs</div>
-    <div class="hero-stat"><strong>2</strong>Poules</div>
+    <div class="hero-stat"><strong>6</strong>Équipes</div>
+    <div class="hero-stat"><strong id="stat-matches">–</strong>Matchs</div>
+    <div class="hero-stat"><strong id="stat-poules">–</strong>Poules</div>
+  </div>
+  <div class="format-toggle">
+    <button class="format-btn" id="fmt-poules" onclick="setFormat('poules')">2 Poules (3+3)</button>
+    <button class="format-btn" id="fmt-unique" onclick="setFormat('unique')">Poule unique (6)</button>
   </div>
 </div>
 
@@ -565,47 +592,17 @@
 
   <!-- ══════ MATCHS ══════ -->
   <div id="matchs" class="section active">
-    <div class="section-label">Poule A — 6 rotations</div>
-    <div id="matches-poule-a"></div>
-    <div class="section-label" style="margin-top:1rem">Poule B — 6 rotations</div>
-    <div id="matches-poule-b"></div>
+    <div id="matches-content"></div>
   </div>
 
   <!-- ══════ CLASSEMENT ══════ -->
   <div id="poules" class="section">
-    <div class="section-label">Poule A</div>
-    <div class="card">
-      <table class="standing-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th style="text-align:left">Équipe</th>
-            <th>J</th><th>G</th><th>N</th><th>P</th><th>Bf</th><th>Pts</th>
-          </tr>
-        </thead>
-        <tbody id="table-a"></tbody>
-      </table>
-    </div>
-    <div class="section-label" style="margin-top:1rem">Poule B</div>
-    <div class="card">
-      <table class="standing-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th style="text-align:left">Équipe</th>
-            <th>J</th><th>G</th><th>N</th><th>P</th><th>Bf</th><th>Pts</th>
-          </tr>
-        </thead>
-        <tbody id="table-b"></tbody>
-      </table>
-    </div>
-    <div style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px">
-      🥇🥈 Les 2 premières de chaque poule se qualifient en demi-finales
-    </div>
+    <div id="standings-content"></div>
   </div>
 
   <!-- ══════ BRACKET ══════ -->
   <div id="bracket" class="section">
+    <div id="bracket-note" style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:10px"></div>
     <div class="section-label">Demi-finales</div>
     <div id="bracket-semis"></div>
     <div class="section-label" style="margin-top:1rem">Finale</div>
@@ -674,7 +671,7 @@
 
 </div>
 
-<div class="footer">Tournoi Coupe du Monde 2025 · Respect & Fair-play</div>
+<div class="footer">Tournoi Coupe du Monde 2026 · Respect & Fair-play</div>
 
 <script>
 // ═══════════════════════════════════════
@@ -682,50 +679,94 @@
 // ═══════════════════════════════════════
 const PIN = "1234"; // ← modifiez ici
 
+// Les 6 équipes 2026 (finalistes / demi-finalistes du Mondial)
 const teams = {
-  A1: { name: "Les Aigles",   flag: "🦅", color: "#185FA5" },
-  A2: { name: "Les Renards",  flag: "🦊", color: "#D32F2F" },
-  A3: { name: "Les Loups",    flag: "🐺", color: "#1D9E75" },
-  A4: { name: "Les Lions",    flag: "🦁", color: "#BA7517" },
-  B1: { name: "Les Requins",  flag: "🦈", color: "#6A1B9A" },
-  B2: { name: "Les Tigres",   flag: "🐯", color: "#E65100" },
-  B3: { name: "Les Cobras",   flag: "🐍", color: "#1B5E20" },
-  B4: { name: "Les Faucons",  flag: "🦃", color: "#1565C0" },
+  FR: { name: "France",     flag: "🇫🇷", color: "#0055A4" },
+  ES: { name: "Espagne",    flag: "🇪🇸", color: "#AA151B" },
+  AR: { name: "Argentine",  flag: "🇦🇷", color: "#6CACE4" },
+  EN: { name: "Angleterre", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", color: "#1B1F3B" },
+  BE: { name: "Belgique",   flag: "🇧🇪", color: "#E8B923" },
+  MA: { name: "Maroc",      flag: "🇲🇦", color: "#006233" },
 };
 
-// Matchs de poule
-let matches = [
-  { id:"m1",  poule:"A", rot:1, terrain:"A", t1:"A1", t2:"A2", s1:2,    s2:1,    status:"done"    },
-  { id:"m2",  poule:"A", rot:1, terrain:"B", t1:"A3", t2:"A4", s1:0,    s2:0,    status:"done"    },
-  { id:"m3",  poule:"B", rot:2, terrain:"A", t1:"B1", t2:"B2", s1:1,    s2:0,    status:"live"    },
-  { id:"m4",  poule:"B", rot:2, terrain:"B", t1:"B3", t2:"B4", s1:null, s2:null, status:"pending" },
-  { id:"m5",  poule:"A", rot:3, terrain:"A", t1:"A1", t2:"A3", s1:null, s2:null, status:"pending" },
-  { id:"m6",  poule:"A", rot:3, terrain:"B", t1:"A2", t2:"A4", s1:null, s2:null, status:"pending" },
-  { id:"m7",  poule:"B", rot:4, terrain:"A", t1:"B1", t2:"B3", s1:null, s2:null, status:"pending" },
-  { id:"m8",  poule:"B", rot:4, terrain:"B", t1:"B2", t2:"B4", s1:null, s2:null, status:"pending" },
-  { id:"m9",  poule:"A", rot:5, terrain:"A", t1:"A1", t2:"A4", s1:null, s2:null, status:"pending" },
-  { id:"m10", poule:"A", rot:5, terrain:"B", t1:"A2", t2:"A3", s1:null, s2:null, status:"pending" },
-  { id:"m11", poule:"B", rot:6, terrain:"A", t1:"B1", t2:"B4", s1:null, s2:null, status:"pending" },
-  { id:"m12", poule:"B", rot:6, terrain:"B", t1:"B2", t2:"B3", s1:null, s2:null, status:"pending" },
+// ── Répartition pour le format "2 poules de 3" (modifiable si besoin) ──
+const POULES_GROUPS = { A: ["FR", "AR", "MA"], B: ["ES", "EN", "BE"] };
+
+// Format A : 2 poules de 3 équipes (round-robin = 3 matchs/poule)
+let matchesPoules = [
+  { id:"mp1", poule:"A", rot:1, terrain:"A", t1:"FR", t2:"AR", s1:null, s2:null, status:"pending" },
+  { id:"mp2", poule:"B", rot:1, terrain:"B", t1:"ES", t2:"EN", s1:null, s2:null, status:"pending" },
+  { id:"mp3", poule:"A", rot:2, terrain:"A", t1:"FR", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mp4", poule:"B", rot:2, terrain:"B", t1:"ES", t2:"BE", s1:null, s2:null, status:"pending" },
+  { id:"mp5", poule:"A", rot:3, terrain:"A", t1:"AR", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mp6", poule:"B", rot:3, terrain:"B", t1:"EN", t2:"BE", s1:null, s2:null, status:"pending" },
+];
+
+// Format B : 1 poule unique de 6 équipes (round-robin = 15 matchs)
+let matchesUnique = [
+  { id:"mu1",  rot:1, terrain:"A", t1:"FR", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mu2",  rot:1, terrain:"B", t1:"ES", t2:"BE", s1:null, s2:null, status:"pending" },
+  { id:"mu3",  rot:1, terrain:"A", t1:"AR", t2:"EN", s1:null, s2:null, status:"pending" },
+  { id:"mu4",  rot:2, terrain:"B", t1:"FR", t2:"BE", s1:null, s2:null, status:"pending" },
+  { id:"mu5",  rot:2, terrain:"A", t1:"EN", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mu6",  rot:2, terrain:"B", t1:"ES", t2:"AR", s1:null, s2:null, status:"pending" },
+  { id:"mu7",  rot:3, terrain:"A", t1:"FR", t2:"EN", s1:null, s2:null, status:"pending" },
+  { id:"mu8",  rot:3, terrain:"B", t1:"AR", t2:"BE", s1:null, s2:null, status:"pending" },
+  { id:"mu9",  rot:3, terrain:"A", t1:"ES", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mu10", rot:4, terrain:"B", t1:"FR", t2:"AR", s1:null, s2:null, status:"pending" },
+  { id:"mu11", rot:4, terrain:"A", t1:"ES", t2:"EN", s1:null, s2:null, status:"pending" },
+  { id:"mu12", rot:4, terrain:"B", t1:"BE", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mu13", rot:5, terrain:"A", t1:"FR", t2:"ES", s1:null, s2:null, status:"pending" },
+  { id:"mu14", rot:5, terrain:"B", t1:"AR", t2:"MA", s1:null, s2:null, status:"pending" },
+  { id:"mu15", rot:5, terrain:"A", t1:"EN", t2:"BE", s1:null, s2:null, status:"pending" },
 ];
 
 // Matchs phases finales — t1/t2 sont des IDs d'équipe ou null (= à déterminer)
-let finals = [
-  { id:"sf1", phase:"semi", label:"Demi-finale 1", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule A vs 2ème Poule B" },
-  { id:"sf2", phase:"semi", label:"Demi-finale 2", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule B vs 2ème Poule A" },
-  { id:"fin", phase:"final", label:"Finale",        duree:"2 × 15 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"Vainqueur SF1 vs Vainqueur SF2" },
+let finalsPoules = [
+  { id:"pfsf1", phase:"semi",  label:"Demi-finale 1", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule A vs 2ème Poule B" },
+  { id:"pfsf2", phase:"semi",  label:"Demi-finale 2", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1ère Poule B vs 2ème Poule A" },
+  { id:"pffin", phase:"final", label:"Finale",        duree:"2 × 15 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"Vainqueur SF1 vs Vainqueur SF2" },
 ];
+let finalsUnique = [
+  { id:"ufsf1", phase:"semi",  label:"Demi-finale 1", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"1er vs 4ème" },
+  { id:"ufsf2", phase:"semi",  label:"Demi-finale 2", duree:"2 × 12 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"2ème vs 3ème" },
+  { id:"uffin", phase:"final", label:"Finale",        duree:"2 × 15 min", t1:null, t2:null, s1:null, s2:null, status:"pending", desc:"Vainqueur SF1 vs Vainqueur SF2" },
+];
+
+// ═══════════════════════════════════════
+// FORMAT (2 poules de 3, ou poule unique de 6)
+// ═══════════════════════════════════════
+let currentFormat = localStorage.getItem('tournoiFormat') === 'unique' ? 'unique' : 'poules';
+
+function getMatches() { return currentFormat === 'poules' ? matchesPoules : matchesUnique; }
+function getFinals()  { return currentFormat === 'poules' ? finalsPoules  : finalsUnique; }
+
+function setFormat(fmt) {
+  currentFormat = fmt;
+  localStorage.setItem('tournoiFormat', fmt);
+  renderAll();
+}
+
+function renderAll() {
+  document.getElementById('fmt-poules').classList.toggle('active', currentFormat === 'poules');
+  document.getElementById('fmt-unique').classList.toggle('active', currentFormat === 'unique');
+  document.getElementById('stat-matches').textContent = getMatches().length;
+  document.getElementById('stat-poules').textContent = currentFormat === 'poules' ? '2' : '1';
+  renderMatches();
+  renderStandings();
+  renderBracket();
+  if (document.getElementById('admin-panel').classList.contains('unlocked')) renderAdminMatches();
+}
 
 // ═══════════════════════════════════════
 // STANDINGS
 // ═══════════════════════════════════════
-function calcStandings(poule) {
-  const ids = Object.keys(teams).filter(k => k.startsWith(poule));
+function calcStandings(ids, matchList) {
   const stats = {};
   ids.forEach(id => stats[id] = { J:0, G:0, N:0, P:0, bf:0, bc:0, pts:0 });
 
-  matches.filter(m => m.poule === poule && m.status === 'done').forEach(m => {
-    if (m.s1 === null) return;
+  matchList.filter(m => m.status === 'done').forEach(m => {
+    if (m.s1 === null || m.s2 === null || !stats[m.t1] || !stats[m.t2]) return;
     stats[m.t1].J++; stats[m.t2].J++;
     stats[m.t1].bf += m.s1; stats[m.t1].bc += m.s2;
     stats[m.t2].bf += m.s2; stats[m.t2].bc += m.s1;
@@ -734,7 +775,7 @@ function calcStandings(poule) {
     else                  { stats[m.t1].N++; stats[m.t1].pts++; stats[m.t2].N++; stats[m.t2].pts++; }
   });
 
-  return ids.sort((a,b) => {
+  return [...ids].sort((a,b) => {
     const sa = stats[a], sb = stats[b];
     if (sb.pts !== sa.pts) return sb.pts - sa.pts;
     return (sb.bf-sb.bc) - (sa.bf-sa.bc);
@@ -743,15 +784,26 @@ function calcStandings(poule) {
 
 // Recalcule automatiquement les qualifiés et remplit les demi-finales/finale
 function syncBracketTeams() {
-  const topA = calcStandings('A');
-  const topB = calcStandings('B');
+  const finals = getFinals();
 
-  // Demi-finale 1 : 1ère A vs 2ème B
-  finals[0].t1 = topA[0] ? topA[0].id : null;
-  finals[0].t2 = topB[1] ? topB[1].id : null;
-  // Demi-finale 2 : 1ère B vs 2ème A
-  finals[1].t1 = topB[0] ? topB[0].id : null;
-  finals[1].t2 = topA[1] ? topA[1].id : null;
+  if (currentFormat === 'poules') {
+    const topA = calcStandings(POULES_GROUPS.A, matchesPoules.filter(m => m.poule === 'A'));
+    const topB = calcStandings(POULES_GROUPS.B, matchesPoules.filter(m => m.poule === 'B'));
+    // Demi-finale 1 : 1ère A vs 2ème B
+    finals[0].t1 = topA[0] ? topA[0].id : null;
+    finals[0].t2 = topB[1] ? topB[1].id : null;
+    // Demi-finale 2 : 1ère B vs 2ème A
+    finals[1].t1 = topB[0] ? topB[0].id : null;
+    finals[1].t2 = topA[1] ? topA[1].id : null;
+  } else {
+    const top = calcStandings(Object.keys(teams), matchesUnique);
+    // Demi-finale 1 : 1er vs 4ème
+    finals[0].t1 = top[0] ? top[0].id : null;
+    finals[0].t2 = top[3] ? top[3].id : null;
+    // Demi-finale 2 : 2ème vs 3ème
+    finals[1].t1 = top[1] ? top[1].id : null;
+    finals[1].t2 = top[2] ? top[2].id : null;
+  }
 
   // Finale : vainqueur SF1 vs vainqueur SF2
   const sf1 = finals[0];
@@ -765,66 +817,100 @@ function syncBracketTeams() {
 }
 
 // ═══════════════════════════════════════
-// RENDER MATCHS POULE
+// RENDER MATCHS
 // ═══════════════════════════════════════
-function renderMatches() {
-  const aEl = document.getElementById('matches-poule-a');
-  const bEl = document.getElementById('matches-poule-b');
-  aEl.innerHTML = '';
-  bEl.innerHTML = '';
+function matchCardHtml(m, headerText) {
+  const t1 = teams[m.t1], t2 = teams[m.t2];
+  const badgeClass = m.status === 'live' ? 'badge-live' : m.status === 'done' ? 'badge-done' : 'badge-next';
+  const badgeText  = m.status === 'live' ? '🔴 EN COURS' : m.status === 'done' ? 'Terminé' : 'À venir';
+  const scoreStr   = (m.s1 !== null && m.s2 !== null)
+    ? `<div class="score-display">${m.s1} – ${m.s2}</div>`
+    : `<div class="score-vs">VS</div>`;
 
-  matches.forEach(m => {
-    const t1 = teams[m.t1], t2 = teams[m.t2];
-    const badgeClass = m.status === 'live' ? 'badge-live' : m.status === 'done' ? 'badge-done' : 'badge-next';
-    const badgeText  = m.status === 'live' ? '🔴 EN COURS' : m.status === 'done' ? 'Terminé' : 'À venir';
-    const scoreStr   = (m.s1 !== null && m.s2 !== null)
-      ? `<div class="score-display">${m.s1} – ${m.s2}</div>`
-      : `<div class="score-vs">VS</div>`;
-
-    const html = `
-      <div class="card">
-        <div class="card-header">
-          <span class="card-header-text">Rotation ${m.rot} · Terrain ${m.terrain} · 15 min</span>
-          <span class="badge ${badgeClass}">${badgeText}</span>
-        </div>
-        <div class="match-body">
-          <div class="vs-row">
-            <div class="team-col">
-              <div class="team-flag" style="background:${t1.color}22;border-color:${t1.color}55">${t1.flag}</div>
-              <div class="team-label">${t1.name}</div>
-            </div>
-            <div class="score-col">${scoreStr}</div>
-            <div class="team-col right">
-              <div class="team-flag" style="background:${t2.color}22;border-color:${t2.color}55">${t2.flag}</div>
-              <div class="team-label">${t2.name}</div>
-            </div>
+  return `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-text">${headerText}</span>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="match-body">
+        <div class="vs-row">
+          <div class="team-col">
+            <div class="team-flag" style="background:${t1.color}22;border-color:${t1.color}55">${t1.flag}</div>
+            <div class="team-label">${t1.name}</div>
+          </div>
+          <div class="score-col">${scoreStr}</div>
+          <div class="team-col right">
+            <div class="team-flag" style="background:${t2.color}22;border-color:${t2.color}55">${t2.flag}</div>
+            <div class="team-label">${t2.name}</div>
           </div>
         </div>
-      </div>`;
+      </div>
+    </div>`;
+}
 
-    if (m.poule === 'A') aEl.innerHTML += html;
-    else bEl.innerHTML += html;
-  });
+function renderMatches() {
+  const el = document.getElementById('matches-content');
+  if (currentFormat === 'poules') {
+    const aHtml = matchesPoules.filter(m => m.poule === 'A').map(m => matchCardHtml(m, `Rotation ${m.rot} · Terrain ${m.terrain} · 15 min`)).join('');
+    const bHtml = matchesPoules.filter(m => m.poule === 'B').map(m => matchCardHtml(m, `Rotation ${m.rot} · Terrain ${m.terrain} · 15 min`)).join('');
+    el.innerHTML = `
+      <div class="section-label">Poule A — 3 matchs</div>
+      <div>${aHtml}</div>
+      <div class="section-label" style="margin-top:1rem">Poule B — 3 matchs</div>
+      <div>${bHtml}</div>`;
+  } else {
+    const html = matchesUnique.map(m => matchCardHtml(m, `Journée ${m.rot} · Terrain ${m.terrain} · 15 min`)).join('');
+    el.innerHTML = `
+      <div class="section-label">Poule unique — 15 matchs</div>
+      <div>${html}</div>`;
+  }
 }
 
 // ═══════════════════════════════════════
 // RENDER STANDINGS
 // ═══════════════════════════════════════
+function standingsRowsHtml(rows, qualifyCount) {
+  return rows.map((r, i) => {
+    const t = teams[r.id];
+    const q = i < qualifyCount ? '<span class="qualified-badge">Q</span>' : '';
+    return `<tr class="${i<qualifyCount?'qualified':''}">
+      <td><span class="rank-num">${i+1}</span></td>
+      <td><div class="team-cell"><span class="mini-flag">${t.flag}</span>${t.name}${q}</div></td>
+      <td>${r.J}</td><td>${r.G}</td><td>${r.N}</td><td>${r.P}</td><td>${r.bf}</td>
+      <td class="pts">${r.pts}</td>
+    </tr>`;
+  }).join('');
+}
+
+function standingsTableHtml(label, marginTop, bodyHtml) {
+  return `
+    <div class="section-label"${marginTop ? ' style="margin-top:1rem"' : ''}>${label}</div>
+    <div class="card">
+      <table class="standing-table">
+        <thead>
+          <tr><th>#</th><th style="text-align:left">Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th>Bf</th><th>Pts</th></tr>
+        </thead>
+        <tbody>${bodyHtml}</tbody>
+      </table>
+    </div>`;
+}
+
 function renderStandings() {
-  ['A','B'].forEach(poule => {
-    const tbody = document.getElementById(`table-${poule.toLowerCase()}`);
-    const rows = calcStandings(poule);
-    tbody.innerHTML = rows.map((r, i) => {
-      const t = teams[r.id];
-      const q = i < 2 ? '<span class="qualified-badge">Q</span>' : '';
-      return `<tr class="${i<2?'qualified':''}">
-        <td><span class="rank-num">${i+1}</span></td>
-        <td><div class="team-cell"><span class="mini-flag">${t.flag}</span>${t.name}${q}</div></td>
-        <td>${r.J}</td><td>${r.G}</td><td>${r.N}</td><td>${r.P}</td><td>${r.bf}</td>
-        <td class="pts">${r.pts}</td>
-      </tr>`;
-    }).join('');
-  });
+  const el = document.getElementById('standings-content');
+  if (currentFormat === 'poules') {
+    const rowsA = calcStandings(POULES_GROUPS.A, matchesPoules.filter(m => m.poule === 'A'));
+    const rowsB = calcStandings(POULES_GROUPS.B, matchesPoules.filter(m => m.poule === 'B'));
+    el.innerHTML =
+      standingsTableHtml('Poule A', false, standingsRowsHtml(rowsA, 2)) +
+      standingsTableHtml('Poule B', true, standingsRowsHtml(rowsB, 2)) +
+      `<div style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px">🥇🥈 Les 2 premières de chaque poule se qualifient en demi-finales</div>`;
+  } else {
+    const rows = calcStandings(Object.keys(teams), matchesUnique);
+    el.innerHTML =
+      standingsTableHtml('Classement général', false, standingsRowsHtml(rows, 4)) +
+      `<div style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px">🥇🥈🥉4️⃣ Les 4 premières se qualifient en demi-finales</div>`;
+  }
 }
 
 // ═══════════════════════════════════════
@@ -832,9 +918,13 @@ function renderStandings() {
 // ═══════════════════════════════════════
 function renderBracket() {
   syncBracketTeams();
+  const finals = getFinals();
 
   const sfEl  = document.getElementById('bracket-semis');
   const finEl = document.getElementById('bracket-finale');
+  document.getElementById('bracket-note').textContent = currentFormat === 'poules'
+    ? '🥇🥈 Qualification : 1ère de chaque poule + 2ème de l\'autre poule'
+    : '🥇🥈🥉4️⃣ Qualification : les 4 premières de la poule unique (1er-4e, 2e-3e)';
 
   function matchCard(f) {
     const isFinal = f.phase === 'final';
@@ -898,6 +988,8 @@ function renderBracket() {
 // ═══════════════════════════════════════
 function renderAdminMatches() {
   const list = document.getElementById('admin-matches-list');
+  const matches = getMatches();
+  const finals = getFinals();
 
   function adminItem(m, labelHtml, isPoule) {
     const t1 = m.t1 && teams[m.t1] ? teams[m.t1] : null;
@@ -923,8 +1015,9 @@ function renderAdminMatches() {
     </div>`;
   }
 
-  const pouleItems = matches.map(m =>
-    adminItem(m, `Poule ${m.poule} · Rotation ${m.rot} · Terrain ${m.terrain}`, true)
+  const pouleItems = matches.map(m => currentFormat === 'poules'
+    ? adminItem(m, `Poule ${m.poule} · Rotation ${m.rot} · Terrain ${m.terrain}`, true)
+    : adminItem(m, `Journée ${m.rot} · Terrain ${m.terrain}`, true)
   ).join('');
 
   syncBracketTeams();
@@ -936,14 +1029,14 @@ function renderAdminMatches() {
     <div class="section-label">Matchs de poule</div>
     ${pouleItems}
     <div class="section-label" style="margin-top:1.2rem">Phases finales</div>
-    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-bottom:10px">Les équipes se remplissent automatiquement selon le classement des poules.</div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-bottom:10px">Les équipes se remplissent automatiquement selon le classement.</div>
     ${finalItems}`;
 }
 
 function saveMatch(id, type) {
   let m;
-  if (type === 'poule') m = matches.find(x => x.id === id);
-  else m = finals.find(x => x.id === id);
+  if (type === 'poule') m = getMatches().find(x => x.id === id);
+  else m = getFinals().find(x => x.id === id);
 
   const s1v = document.getElementById(`adm-s1-${id}`).value;
   const s2v = document.getElementById(`adm-s2-${id}`).value;
@@ -992,9 +1085,7 @@ function showTab(id, btn) {
 }
 
 // INIT
-renderMatches();
-renderStandings();
-renderBracket();
+renderAll();
 </script>
 </body>
 </html>
